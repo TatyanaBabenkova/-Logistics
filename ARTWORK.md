@@ -37,3 +37,24 @@ Reference: generated truck for drawing style only. One transparent sprite of a c
 - https://evocargo.com/implementations/detail/proizvodstvennyy-biznes-vnedryaet-avtonomnyy-transport/
 - https://tracteasy.com/use-cases/bmw/
 - https://ronavi-robotics.ru/catalogue/h1500
+
+
+## Версия 03 — фуры, приёмка и склад
+
+Четыре новых рисунка созданы встроенным инструментом image_gen. Фуры — собирательные образы российских КАМАЗов, не точные изображения конкретных моделей. Для стилевого согласования использован прежний рисунок внутреннего грузовика.
+
+### semiRed
+
+Use case: illustration-story. Create a transparent-background isolated sprite for a Russian factory logistics animated film. Full articulated semitrailer truck facing RIGHT, strict side view slightly showing front. Russian KAMAZ-inspired modern tall cab, red cab and long light grey curtain-sided semitrailer with three rear axles. Recognizable Russian cab-over heavy truck silhouette, no foreign brand logos, no text. Entire tractor and trailer visible, wheels aligned on same baseline. Warm hand-painted storybook gouache, fine dark outlines, muted industrial palette, realistic proportions. Landscape very wide 3:1. Genuine alpha transparency, no ground, no scenery, no decorative elements. Match supporting reference's illustration style only; vehicle must be a much longer articulated supplier semi, not the reference's compact internal van.
+
+### semiBlue
+
+Use case: illustration-story. Transparent isolated full articulated supplier semi-truck sprite facing RIGHT. Russian older KAMAZ 54115-inspired boxy blue cab, flat nearly upright windshield, small orange roof lights, long beige curtain semitrailer, three trailer axles. Entire vehicle with generous margins, all wheels same baseline. Side view, tiny glimpse front. Warm hand-painted gouache storybook style with dark fine outlines matching reference's style only. Different older Russian cab silhouette, no logos, lettering or license plate text. Wide 3:1 composition, genuine alpha transparent backdrop, no road or ground.
+
+### receiving
+
+Use case illustration-story. Background for side-view animated logistics movie, warm painted gouache, muted sage green and brick ochre, thin handdrawn outlines. Existing older Russian factory receiving yard, widescreen16:9. Eye-level view perpendicular to building facade. Left background factory entrance with small guardhouse and open gate, center long open-sided covered receiving canopy with three empty bays, right old brick warehouse with large open loading door. Buildings confined mostly upper half. Foreground entire lower half wide flat asphalt apron empty for later animated trucks, no perspective markings that constrain vehicles. Daylight, trees behind perimeter. No vehicles, no people, no goods, no text, no logos. Quiet clear legible scene, not diagram, no aerial view.
+
+### warehouse
+
+Use case illustration-story. Wide16:9 handpainted gouache background for logistics movie, old Russian factory warehouse interior, warm brick walls industrial tall windows roof steel trusses. Side-on level view. Left wide open receiving doorway, center and right industrial low pallet racks containing some tan boxes, empty clearly separated shelf bays. Lower half entirely clear concrete floor for later composited forklift sprites. Gentle daylight muted sage ochre palette fine outlines. Warehouse storage not production line. No text no people no vehicles no logos. Avoid deep perspective, keep racks at back.
