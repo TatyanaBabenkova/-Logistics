@@ -1,6 +1,6 @@
 'use strict';
 const $=id=>document.getElementById(id),D=PRESENTATION;
-const S={tab:'process',index:0,variant:null,phase:0,selected:null,playing:false,time:0,sound:false,tour:0,manual:false,blocked:false,operator:false,ended:false};
+const S={tab:'process',index:0,variant:null,phase:0,selected:null,playing:false,time:0,sound:true,tour:0,manual:false,blocked:false,operator:false,ended:false};
 const audio=$('narration');let loadedKey=null,last=performance.now(),lastStep=-1;
 const tourKeys=['overview','gate','admin','warehouse1','warehouse2','warehouse3','receiving','workshop1','workshop2','finish'];
 const objects=[
@@ -96,8 +96,8 @@ function duration(){if(S.selected||S.detail!==null&&S.detail!==undefined)return 
 function isDeck(){return !!scene().deck}
 function remember(){JOURNEY.memory[S.tab]=S.index}
 function clearSceneState(){S.selected=null;S.detail=null;S.time=0;S.tour=0;S.manual=false;S.ended=false;S.sceneSnapshot=null;lastStep=-1}
-function choose(i,auto=true){if(i<0||i>=D[S.tab].length)return;pause();S.index=i;remember();clearSceneState();closePanels();render();setAudio();if(auto&&S.tab==='process')begin()}
-function changeTab(tab){if(!D[tab])return;pause();remember();S.tab=tab;S.index=Math.min(JOURNEY.memory[tab]||0,D[tab].length-1);clearSceneState();closePanels();render();setAudio()}
+function choose(i,auto=true){if(i<0||i>=D[S.tab].length)return;pause();S.index=i;remember();clearSceneState();closePanels();render();setAudio();if(auto&&(S.tab==='process'||S.sound))begin()}
+function changeTab(tab){if(!D[tab])return;pause();remember();S.tab=tab;S.index=Math.min(JOURNEY.memory[tab]||0,D[tab].length-1);clearSceneState();closePanels();render();setAudio();if(S.sound)begin()}
 function target(direction){if(direction>0&&S.index<D[S.tab].length-1)return {tab:S.tab,index:S.index+1};if(direction<0&&S.index>0)return {tab:S.tab,index:S.index-1};if(S.tab==='equipment')return direction>0?{tab:'start',index:0}:{tab:'implementation',index:D.implementation.length-1};const n=JOURNEY.main.indexOf(S.tab)+direction;if(n<0||n>=JOURNEY.main.length)return null;const tab=JOURNEY.main[n];return {tab,index:direction>0?0:D[tab].length-1}}
 function advance(direction){const t=target(direction);if(!t)return;pause();remember();S.tab=t.tab;S.index=t.index;choose(t.index,true)}
 function panel(){let x=scene(),extra='';const detail=S.detail!==null&&S.detail!==undefined;
@@ -140,12 +140,12 @@ document.addEventListener('click',e=>{const b=e.target.closest('button,[data-obj
  if(b.dataset.process){const i=D.process.findIndex(x=>x.id===b.dataset.process);if(i>=0){changeTab('process');choose(i)}return}
 });
 document.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target.matches('[data-object]')){e.preventDefault();selectObject(e.target.dataset.object)}});
-$('play').onclick=()=>{if(S.playing){pause();return}if(isDeck()||S.tab==='equipment')S.sound=true;if(S.ended){S.time=0;S.ended=false;if(audio.hasAttribute('src'))audio.currentTime=0;if(overview()&&!S.manual){S.tour=0;S.selected=null;S.detail=null;panel();draw()}}begin(false)};
+$('play').onclick=()=>{if(S.playing){pause();return}if(S.ended){S.time=0;S.ended=false;if(audio.hasAttribute('src'))audio.currentTime=0;if(overview()&&!S.manual){S.tour=0;S.selected=null;S.detail=null;panel();draw()}}begin(false)};
 $('sound').onclick=()=>{S.sound=!S.sound;if(!S.sound){audio.pause();controls();return}S.time=0;lastStep=-1;begin()};
 $('previous').onclick=()=>advance(-1);$('next').onclick=()=>advance(1);$('journey-next').onclick=()=>advance(1);
 $('clear-selection').onclick=restoreScene;$('reset-view').onclick=resetView;
 $('journey-finish').onclick=()=>{changeTab('process');choose(0,false)};
-for(const id of ['home','help'])$(id).onclick=()=>{pause();$('welcome').showModal()};$('continue').onclick=()=>{$('welcome').close();pause()};
+for(const id of ['home','help'])$(id).onclick=()=>{pause();$('welcome').showModal()};$('continue').onclick=()=>{$('welcome').close();begin(false)};
 for(const [btn,id] of [['toggle-nav','navigation'],['toggle-info','information']])$(btn).onclick=()=>{const on=!$(id).classList.contains('open');closePanels();$(id).classList.toggle('open',on);$(btn).setAttribute('aria-expanded',String(on))};
 audio.addEventListener('error',()=>{if(S.sound){pause();$('scene-caption').textContent='Запись не загрузилась. Можно продолжить без звука.'}});
 document.addEventListener('visibilitychange',()=>{if(document.hidden)pause()});
