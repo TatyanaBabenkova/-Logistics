@@ -1,0 +1,1 @@
+window.TOUR_AUDIO={"duration": {"overview": 13.01, "gate": 7.8, "admin": 8.94, "warehouse1": 9.18, "warehouse2": 9.16, "warehouse3": 8.77, "receiving": 10.84, "workshop1": 9.65, "workshop2": 8.86, "finish": 9.66}};
