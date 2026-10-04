@@ -96,7 +96,7 @@ function duration(){if(S.selected||S.detail!==null&&S.detail!==undefined)return 
 function isDeck(){return !!scene().deck}
 function remember(){JOURNEY.memory[S.tab]=S.index}
 function clearSceneState(){S.selected=null;S.detail=null;S.time=0;S.tour=0;S.manual=false;S.ended=false;S.sceneSnapshot=null;lastStep=-1}
-function choose(i,auto=true){if(i<0||i>=D[S.tab].length)return;pause();S.index=i;remember();clearSceneState();closePanels();render();setAudio();if(auto&&(S.tab==='process'||S.sound))begin()}
+function choose(i,auto=true){if(i<0||i>=D[S.tab].length)return;pause();S.index=i;remember();clearSceneState();closePanels();render();setAudio();if(auto)begin()}
 function changeTab(tab){if(!D[tab])return;pause();remember();S.tab=tab;S.index=Math.min(JOURNEY.memory[tab]||0,D[tab].length-1);clearSceneState();closePanels();render();setAudio();if(S.sound)begin()}
 function target(direction){if(direction>0&&S.index<D[S.tab].length-1)return {tab:S.tab,index:S.index+1};if(direction<0&&S.index>0)return {tab:S.tab,index:S.index-1};if(S.tab==='equipment')return direction>0?{tab:'start',index:0}:{tab:'implementation',index:D.implementation.length-1};const n=JOURNEY.main.indexOf(S.tab)+direction;if(n<0||n>=JOURNEY.main.length)return null;const tab=JOURNEY.main[n];return {tab,index:direction>0?0:D[tab].length-1}}
 function advance(direction){const t=target(direction);if(!t)return;pause();remember();S.tab=t.tab;S.index=t.index;choose(t.index,true)}
@@ -149,5 +149,15 @@ for(const id of ['home','help'])$(id).onclick=()=>{pause();$('welcome').showModa
 for(const [btn,id] of [['toggle-nav','navigation'],['toggle-info','information']])$(btn).onclick=()=>{const on=!$(id).classList.contains('open');closePanels();$(id).classList.toggle('open',on);$(btn).setAttribute('aria-expanded',String(on))};
 audio.addEventListener('error',()=>{if(S.sound){pause();$('scene-caption').textContent='Запись не загрузилась. Можно продолжить без звука.'}});
 document.addEventListener('visibilitychange',()=>{if(document.hidden)pause()});
-function tick(now){const dt=Math.min((now-last)/1000,.1);last=now;if(S.playing){S.time+=dt;motion();if(S.time>=duration()&&(!S.sound||!key()||audio.ended||audio.error)){if(overview()&&!S.manual&&S.tour<9)goTour(S.tour+1);else{S.ended=true;pause()}}controls()}requestAnimationFrame(tick)}
+function finishSegment(){
+ if(S.sceneSnapshot){restoreScene();begin(false);return}
+ if(overview()&&!S.manual&&S.tour<9){goTour(S.tour+1);return}
+ if(S.tab==='process'&&scene().id==='receiving'){
+  const variants=['distributed','central','mixed'],next=variants.indexOf(S.variant)+1;
+  if(next<variants.length){S.variant=variants[next];clearSceneState();render();begin();return}
+ }
+ if(target(1)){advance(1);return}
+ S.ended=true;pause();$('scene-caption').textContent='Просмотр завершён. Можно вернуться к началу или выбрать любую тему.';
+}
+function tick(now){const dt=Math.min((now-last)/1000,.1);last=now;if(S.playing){S.time+=dt;motion();if(S.time>=duration()+1&&(!S.sound||!key()||audio.ended||audio.error))finishSegment();controls()}requestAnimationFrame(tick)}
 S.detail=null;render();$('welcome').showModal();requestAnimationFrame(tick);
